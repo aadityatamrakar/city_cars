@@ -103,13 +103,13 @@
                 return '<button data-id=\"'+data+'\" data-toggle=\"modal\" data-target=\"#mergeVehicle\" class=\"btn btn-xs btn-default\"><i class=\"glyphicon glyphicon-pencil\"></i> '+data+'</a>';
             }
         },
-        {data: 'name', name: 'customers.name', render:
+        {data: 'name', name: '".env('DB_TBL_PREFIX')."customers.name', render:
             function (data, type, full, meta){
                 return '<a href=\"/data_entry/edit/'+full.cid+'\">'+data+'</a>';
             }
         },
-        {data: 'mobile1', name: 'customers.mobile1'},
-        {data: 'city', name: 'customers.city'},
+        {data: 'mobile1', name: '".env('DB_TBL_PREFIX')."customers.mobile1'},
+        {data: 'city', name: '".env('DB_TBL_PREFIX')."customers.city'},
         {data: 'reg_no', name: 'reg_no'},
         {data: 'model', name: 'model'},
         {data: 'variant', name: 'variant'},

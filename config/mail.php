@@ -2,12 +2,12 @@
 
 return array(
     'driver' => 'smtp', // Driver
-    'host' => 'smtp.sendgrid.net', // Host
+    'host' => 'smtp.gmail.com', // Host
     'port' => 587, // PORT 
-    'from' => array('address' => 'nitin7@gmail.com', 'name' => 'Nitin Agrawal'), // FROM Details
+    'from' => array('address' => 'aaditya.span@gmail.com', 'name' => 'CCDB App Mailer'), // FROM Details
     'encryption' => 'tls', // Encryption
-    'username' => '', // Email Username HERE
-    'password' => '', // Email Password HERE
+    'username' => 'aaditya.span@gmail.com', // Email Username HERE
+    'password' => 'ggudrlbghnegtvnx', // Email Password HERE
 );
 
 

@@ -32,6 +32,14 @@
                             </div>
                         </div>
 
+                        <!-- Textarea -->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="finance">Finance</label>
+                            <div class="col-md-4">
+                                <textarea class="form-control" id="finance" name="finance">{!! implode(',', json_decode(file_get_contents(storage_path('app/finance.json')))) !!}</textarea>
+                            </div>
+                        </div>
+
                         <!-- Button -->
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="save"></label>

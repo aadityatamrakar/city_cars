@@ -237,19 +237,19 @@
             }else sql_where = '1';
 
             if(rpt_tbl == 'customers'){
-                sql_query = 'SELECT '+sql_select+' FROM customers ' +
+                sql_query = 'SELECT '+sql_select+' FROM {{ env('DB_TBL_PREFIX') }}customers ' +
                     'WHERE '+sql_where;
             }else if(rpt_tbl == 'vehicles'){
-                sql_query = 'SELECT '+sql_select+' FROM vehicles ' +
-                    'JOIN customers ON customers.id=vehicles.customer_id ' +
+                sql_query = 'SELECT '+sql_select+' FROM {{ env('DB_TBL_PREFIX') }}vehicles ' +
+                    'JOIN {{ env('DB_TBL_PREFIX') }}customers ON {{ env('DB_TBL_PREFIX') }}customers.id={{ env('DB_TBL_PREFIX') }}vehicles.customer_id ' +
                     'WHERE '+sql_where;
             }else if(rpt_tbl == 'transactions'){
-                sql_query = 'SELECT '+sql_select+' FROM transactions ' +
-                    'JOIN customers ON customers.id=transactions.customer_id ' +
-                    'JOIN vehicles ON vehicles.id=transactions.vehicle_id ' +
+                sql_query = 'SELECT '+sql_select+' FROM {{ env('DB_TBL_PREFIX') }}transactions ' +
+                    'JOIN {{ env('DB_TBL_PREFIX') }}customers ON {{ env('DB_TBL_PREFIX') }}customers.id={{ env('DB_TBL_PREFIX') }}transactions.customer_id ' +
+                    'JOIN {{ env('DB_TBL_PREFIX') }}vehicles ON {{ env('DB_TBL_PREFIX') }}vehicles.id={{ env('DB_TBL_PREFIX') }}transactions.vehicle_id ' +
                     'WHERE '+sql_where;
             }else if(rpt_tbl == 'sessions'){
-                sql_query = 'SELECT '+sql_select+' FROM sessions ' +
+                sql_query = 'SELECT '+sql_select+' FROM {{ env('DB_TBL_PREFIX') }}sessions ' +
                     'WHERE '+sql_where;
             }else{
                 $.notify('Select report Table', 'error');
@@ -314,19 +314,19 @@
             rpt_tbl = $("#report_table").val();
 
             if(rpt_tbl == 'customers'){
-                sql_query = 'SELECT '+sql_select+' FROM customers ' +
+                sql_query = 'SELECT '+sql_select+' FROM {{ env('DB_TBL_PREFIX') }}customers ' +
                     'WHERE '+result.sql;
             }else if(rpt_tbl == 'vehicles'){
-                sql_query = 'SELECT '+sql_select+' FROM vehicles ' +
-                    'JOIN customers ON customers.id=vehicles.customer_id ' +
+                sql_query = 'SELECT '+sql_select+' FROM {{ env('DB_TBL_PREFIX') }}vehicles ' +
+                    'JOIN {{ env('DB_TBL_PREFIX') }}customers ON {{ env('DB_TBL_PREFIX') }}customers.id={{ env('DB_TBL_PREFIX') }}vehicles.customer_id ' +
                     'WHERE '+result.sql;
             }else if(rpt_tbl == 'transactions'){
-                sql_query = 'SELECT '+sql_select+' FROM transactions ' +
-                    'JOIN customers ON customers.id=transactions.customer_id ' +
-                    'JOIN vehicles ON vehicles.id=transactions.vehicle_id ' +
+                sql_query = 'SELECT '+sql_select+' FROM {{ env('DB_TBL_PREFIX') }}transactions ' +
+                    'JOIN {{ env('DB_TBL_PREFIX') }}customers ON {{ env('DB_TBL_PREFIX') }}customers.id={{ env('DB_TBL_PREFIX') }}transactions.customer_id ' +
+                    'JOIN {{ env('DB_TBL_PREFIX') }}vehicles ON {{ env('DB_TBL_PREFIX') }}vehicles.id={{ env('DB_TBL_PREFIX') }}transactions.vehicle_id ' +
                     'WHERE '+result.sql;
             }else if(rpt_tbl == 'sessions'){
-                sql_query = 'SELECT '+sql_select+' FROM sessions ' +
+                sql_query = 'SELECT '+sql_select+' FROM {{ env('DB_TBL_PREFIX') }}sessions ' +
                     'WHERE '+result.sql;
             }else{
                 $.notify('Select report Table', 'error');
@@ -416,84 +416,84 @@
         }
 
         var session_filter = [
-            {id: 'user_id', field:"sessions.user_id", label: 'User ID', type: 'string'},
-            {id: 'ip_addr', field:"sessions.ip_addr", label: 'IP Addr', type: 'string'},
-            {id: 'client', field:"sessions.client", label: 'Client', type: 'string'},
-            {id: 'operating_system', field:"sessions.operating_system", label: 'OS', type: 'string'},
-            {id: 'device', field:"sessions.device", label: 'Device', type: 'string'},
-            {id: 'brand_name', field:"sessions.brand_name", label: 'Brand', type: 'string' },
-            {id: 'model', field:"sessions.model", label: 'Model', type: 'string'},
-            {id: 'created_at', field:"sessions.created_at", label: 'created_at', type: 'date'},
+            {id: 'user_id', field:"{{ env('DB_TBL_PREFIX') }}sessions.user_id", label: 'User ID', type: 'string'},
+            {id: 'ip_addr', field:"{{ env('DB_TBL_PREFIX') }}sessions.ip_addr", label: 'IP Addr', type: 'string'},
+            {id: 'client', field:"{{ env('DB_TBL_PREFIX') }}sessions.client", label: 'Client', type: 'string'},
+            {id: 'operating_system', field:"{{ env('DB_TBL_PREFIX') }}sessions.operating_system", label: 'OS', type: 'string'},
+            {id: 'device', field:"{{ env('DB_TBL_PREFIX') }}sessions.device", label: 'Device', type: 'string'},
+            {id: 'brand_name', field:"{{ env('DB_TBL_PREFIX') }}sessions.brand_name", label: 'Brand', type: 'string' },
+            {id: 'model', field:"{{ env('DB_TBL_PREFIX') }}sessions.model", label: 'Model', type: 'string'},
+            {id: 'created_at', field:"{{ env('DB_TBL_PREFIX') }}sessions.created_at", label: 'created_at', type: 'date'},
         ];
 
         var customer_filter = [
-            {id: 'name', field:"customers.name", label: 'Name', type: 'string'},
-            {id: 'mobile1', field:"customers.mobile1", label: 'Mobile 1', type: 'string', input: 'number',},
-            {id: 'mobile2', field:"customers.mobile2", label: 'Mobile 2', type: 'string', input: 'number',},
-            {id: 'email', field:"customers.email", label: 'Email', type: 'string'},
-            {id: 'city', field:"customers.city", label: 'City', type: 'string'},
-            {id: 'address', field:"customers.address", label: 'Address', type: 'string' },
-            {id: 'dob', field:"customers.dob", label: 'DOB', type: 'date'},
-            {id: 'autocard', field:"customers.autocard", label: 'Autocard', type: 'boolean', input: 'radio',values: ["No", "Yes"]},
+            {id: 'name', field:"{{ env('DB_TBL_PREFIX') }}customers.name", label: 'Name', type: 'string'},
+            {id: 'mobile1', field:"{{ env('DB_TBL_PREFIX') }}customers.mobile1", label: 'Mobile 1', type: 'string', input: 'number',},
+            {id: 'mobile2', field:"{{ env('DB_TBL_PREFIX') }}customers.mobile2", label: 'Mobile 2', type: 'string', input: 'number',},
+            {id: 'email', field:"{{ env('DB_TBL_PREFIX') }}customers.email", label: 'Email', type: 'string'},
+            {id: 'city', field:"{{ env('DB_TBL_PREFIX') }}customers.city", label: 'City', type: 'string'},
+            {id: 'address', field:"{{ env('DB_TBL_PREFIX') }}customers.address", label: 'Address', type: 'string' },
+            {id: 'dob', field:"{{ env('DB_TBL_PREFIX') }}customers.dob", label: 'DOB', type: 'date'},
+            {id: 'autocard', field:"{{ env('DB_TBL_PREFIX') }}customers.autocard", label: 'Autocard', type: 'boolean', input: 'radio',values: ["No", "Yes"]},
         ];
         var vehicle_filter = [
             // Customer Columns
-            {id: 'name', field:"customers.name", label: 'Name', type: 'string'},
-            {id: 'mobile1', field:"customers.mobile1", label: 'Mobile 1', type: 'string', input: 'number',},
-            {id: 'mobile2', field:"customers.mobile2", label: 'Mobile 2', type: 'string', input: 'number',},
-            {id: 'email', field:"customers.email", label: 'Email', type: 'string'},
-            {id: 'city', field:"customers.city", label: 'City', type: 'string'},
-            {id: 'address', field:"customers.address", label: 'Address', type: 'string' },
-            {id: 'dob', field:"customers.dob", label: 'DOB', type: 'date'},
-            {id: 'autocard', field:"customers.autocard", label: 'Autocard', type: 'boolean', input: 'radio',values: ["No", "Yes"]},
+            {id: 'name', field:"{{ env('DB_TBL_PREFIX') }}customers.name", label: 'Name', type: 'string'},
+            {id: 'mobile1', field:"{{ env('DB_TBL_PREFIX') }}customers.mobile1", label: 'Mobile 1', type: 'string', input: 'number',},
+            {id: 'mobile2', field:"{{ env('DB_TBL_PREFIX') }}customers.mobile2", label: 'Mobile 2', type: 'string', input: 'number',},
+            {id: 'email', field:"{{ env('DB_TBL_PREFIX') }}customers.email", label: 'Email', type: 'string'},
+            {id: 'city', field:"{{ env('DB_TBL_PREFIX') }}customers.city", label: 'City', type: 'string'},
+            {id: 'address', field:"{{ env('DB_TBL_PREFIX') }}customers.address", label: 'Address', type: 'string' },
+            {id: 'dob', field:"{{ env('DB_TBL_PREFIX') }}customers.dob", label: 'DOB', type: 'date'},
+            {id: 'autocard', field:"{{ env('DB_TBL_PREFIX') }}customers.autocard", label: 'Autocard', type: 'boolean', input: 'radio',values: ["No", "Yes"]},
             // Vehicle Columns
-            {id: 'reg_no', field:"vehicles.reg_no", label: 'Reg No.', type: 'string'},
-            {id: 'chassis_no', field:"vehicles.chassis_no", label: 'Chassis No', type: 'string', input: 'number'},
-            {id: 'engine_no', field:"vehicles.engine_no", label: 'Engine No', type: 'string', input: 'number'},
-            {id: 'model', field:"vehicles.model", label: 'Model', type: 'string', input: 'select', values: {!! file_get_contents(storage_path('app/vehicle_models.json')) !!}},
-            {id: 'variant', field:"vehicles.variant", label: 'Variant', type: 'string'},
-            {id: 'mfgyear', field:"vehicles.mfgyear", label: 'Mfg. Year', type: 'integer', input: 'number'},
-            {id: 'mi', field:"vehicles.mi", label: 'MI', type: 'string', input: 'radio', values: ['No', 'Yes']},
-            {id: 'finance', field:"vehicles.finance", label: 'Finance', type: 'string', input: 'radio', values: ['No', 'Yes']},
-            {id: 'fuel', field:"vehicles.fuel", label: 'Fuel', type: 'string', input: 'radio', values: ['No', 'Yes']},
-            {id: 'insurance', field:"vehicles.insurance", label: 'Insurance', type: 'string'},
-            {id: 'warranty', field:"vehicles.warranty", label: 'Warranty', type: 'string'},
-            {id: 'warranty_exp', field:"vehicles.warranty_exp", label: 'Warranty Exp.', type: 'date'},
-            {id: 'amc', field:"vehicles.amc", label: 'AMC', type: 'string'},
-            {id: 'amc_key', field:"vehicles.amc_exp", label: 'AMC Exp', type: 'date'},
+            {id: 'reg_no', field:"{{ env('DB_TBL_PREFIX') }}vehicles.reg_no", label: 'Reg No.', type: 'string'},
+            {id: 'chassis_no', field:"{{ env('DB_TBL_PREFIX') }}vehicles.chassis_no", label: 'Chassis No', type: 'string', input: 'number'},
+            {id: 'engine_no', field:"{{ env('DB_TBL_PREFIX') }}vehicles.engine_no", label: 'Engine No', type: 'string', input: 'number'},
+            {id: 'model', field:"{{ env('DB_TBL_PREFIX') }}vehicles.model", label: 'Model', type: 'string', input: 'select', values: {!! file_get_contents(storage_path('app/vehicle_models.json')) !!}},
+            {id: 'variant', field:"{{ env('DB_TBL_PREFIX') }}vehicles.variant", label: 'Variant', type: 'string'},
+            {id: 'mfgyear', field:"{{ env('DB_TBL_PREFIX') }}vehicles.mfgyear", label: 'Mfg. Year', type: 'integer', input: 'number'},
+            {id: 'mi', field:"{{ env('DB_TBL_PREFIX') }}vehicles.mi", label: 'MI', type: 'string', input: 'radio', values: ['No', 'Yes']},
+            {id: 'finance', field:"{{ env('DB_TBL_PREFIX') }}vehicles.finance", label: 'Finance', type: 'string', input: 'radio', values: ['No', 'Yes']},
+            {id: 'fuel', field:"{{ env('DB_TBL_PREFIX') }}vehicles.fuel", label: 'Fuel', type: 'string', input: 'radio', values: ['No', 'Yes']},
+            {id: 'insurance', field:"{{ env('DB_TBL_PREFIX') }}vehicles.insurance", label: 'Insurance', type: 'string'},
+            {id: 'warranty', field:"{{ env('DB_TBL_PREFIX') }}vehicles.warranty", label: 'Warranty', type: 'string'},
+            {id: 'warranty_exp', field:"{{ env('DB_TBL_PREFIX') }}vehicles.warranty_exp", label: 'Warranty Exp.', type: 'date'},
+            {id: 'amc', field:"{{ env('DB_TBL_PREFIX') }}vehicles.amc", label: 'AMC', type: 'string'},
+            {id: 'amc_key', field:"{{ env('DB_TBL_PREFIX') }}vehicles.amc_exp", label: 'AMC Exp', type: 'date'},
         ];
         var transaction_filter = [
             // Customer Columns
-            {id: 'name', field:"customers.name", label: 'Name', type: 'string'},
-            {id: 'mobile1', field:"customers.mobile1", label: 'Mobile 1', type: 'string', input: 'number',},
-            {id: 'mobile2', field:"customers.mobile2", label: 'Mobile 2', type: 'string', input: 'number',},
-            {id: 'email', field:"customers.email", label: 'Email', type: 'string'},
-            {id: 'city', field:"customers.city", label: 'City', type: 'string'},
-            {id: 'address', field:"customers.address", label: 'Address', type: 'string' },
-            {id: 'dob', field:"customers.dob", label: 'DOB', type: 'date'},
-            {id: 'autocard', field:"customers.autocard", label: 'Autocard', type: 'boolean', input: 'radio',values: ["No", "Yes"]},
+            {id: 'name', field:"{{ env('DB_TBL_PREFIX') }}customers.name", label: 'Name', type: 'string'},
+            {id: 'mobile1', field:"{{ env('DB_TBL_PREFIX') }}customers.mobile1", label: 'Mobile 1', type: 'string', input: 'number',},
+            {id: 'mobile2', field:"{{ env('DB_TBL_PREFIX') }}customers.mobile2", label: 'Mobile 2', type: 'string', input: 'number',},
+            {id: 'email', field:"{{ env('DB_TBL_PREFIX') }}customers.email", label: 'Email', type: 'string'},
+            {id: 'city', field:"{{ env('DB_TBL_PREFIX') }}customers.city", label: 'City', type: 'string'},
+            {id: 'address', field:"{{ env('DB_TBL_PREFIX') }}customers.address", label: 'Address', type: 'string' },
+            {id: 'dob', field:"{{ env('DB_TBL_PREFIX') }}customers.dob", label: 'DOB', type: 'date'},
+            {id: 'autocard', field:"{{ env('DB_TBL_PREFIX') }}customers.autocard", label: 'Autocard', type: 'boolean', input: 'radio',values: ["No", "Yes"]},
             // Vehicle Columns
-            {id: 'reg_no', field:"vehicles.reg_no", label: 'Reg No.', type: 'string'},
-            {id: 'chassis_no', field:"vehicles.chassis_no", label: 'Chassis No', type: 'string', input: 'number'},
-            {id: 'engine_no', field:"vehicles.engine_no", label: 'Engine No', type: 'string', input: 'number'},
-            {id: 'model', field:"vehicles.model", label: 'Model', type: 'string', input: 'select', values: {!! file_get_contents(storage_path('app/vehicle_models.json')) !!}},
-            {id: 'variant', field:"vehicles.variant", label: 'Variant', type: 'string'},
-            {id: 'mfgyear', field:"vehicles.mfgyear", label: 'Mfg. Year', type: 'integer', input: 'number'},
-            {id: 'mi', field:"vehicles.mi", label: 'MI', type: 'string', input: 'radio', values: ['No', 'Yes']},
-            {id: 'finance', field:"vehicles.finance", label: 'Finance', type: 'string', input: 'radio', values: ['No', 'Yes']},
-            {id: 'fuel', field:"vehicles.fuel", label: 'Fuel', type: 'string', input: 'radio', values: ['No', 'Yes']},
-            {id: 'insurance', field:"vehicles.insurance", label: 'Insurance', type: 'string'},
-            {id: 'warranty', field:"vehicles.warranty", label: 'Warranty', type: 'string'},
-            {id: 'warranty_exp', field:"vehicles.warranty_exp", label: 'Warranty Exp.', type: 'date'},
-            {id: 'amc', field:"vehicles.amc", label: 'AMC', type: 'string'},
-            {id: 'amc_key', field:"vehicles.amc_exp", label: 'AMC Exp', type: 'date'},
+            {id: 'reg_no', field:"{{ env('DB_TBL_PREFIX') }}vehicles.reg_no", label: 'Reg No.', type: 'string'},
+            {id: 'chassis_no', field:"{{ env('DB_TBL_PREFIX') }}vehicles.chassis_no", label: 'Chassis No', type: 'string', input: 'number'},
+            {id: 'engine_no', field:"{{ env('DB_TBL_PREFIX') }}vehicles.engine_no", label: 'Engine No', type: 'string', input: 'number'},
+            {id: 'model', field:"{{ env('DB_TBL_PREFIX') }}vehicles.model", label: 'Model', type: 'string', input: 'select', values: {!! file_get_contents(storage_path('app/vehicle_models.json')) !!}},
+            {id: 'variant', field:"{{ env('DB_TBL_PREFIX') }}vehicles.variant", label: 'Variant', type: 'string'},
+            {id: 'mfgyear', field:"{{ env('DB_TBL_PREFIX') }}vehicles.mfgyear", label: 'Mfg. Year', type: 'integer', input: 'number'},
+            {id: 'mi', field:"{{ env('DB_TBL_PREFIX') }}vehicles.mi", label: 'MI', type: 'string', input: 'radio', values: ['No', 'Yes']},
+            {id: 'finance', field:"{{ env('DB_TBL_PREFIX') }}vehicles.finance", label: 'Finance', type: 'string', input: 'radio', values: ['No', 'Yes']},
+            {id: 'fuel', field:"{{ env('DB_TBL_PREFIX') }}vehicles.fuel", label: 'Fuel', type: 'string', input: 'radio', values: ['No', 'Yes']},
+            {id: 'insurance', field:"{{ env('DB_TBL_PREFIX') }}vehicles.insurance", label: 'Insurance', type: 'string'},
+            {id: 'warranty', field:"{{ env('DB_TBL_PREFIX') }}vehicles.warranty", label: 'Warranty', type: 'string'},
+            {id: 'warranty_exp', field:"{{ env('DB_TBL_PREFIX') }}vehicles.warranty_exp", label: 'Warranty Exp.', type: 'date'},
+            {id: 'amc', field:"{{ env('DB_TBL_PREFIX') }}vehicles.amc", label: 'AMC', type: 'string'},
+            {id: 'amc_key', field:"{{ env('DB_TBL_PREFIX') }}vehicles.amc_exp", label: 'AMC Exp', type: 'date'},
             // Transaction Filter
-            {id: 'transaction_date', field:"transactions.transaction_date", label: 'T Date', type: 'date'},
-            {id: 'transaction_type', field:"transactions.transaction_type", label: 'T Type', type: 'string', input: 'select', values: {!! file_get_contents(storage_path('app/transaction_types.json')) !!} },
-            {id: 'amount', field:"transactions.amount", label: 'Amount', type: 'string', input: 'number'},
-            {id: 'mobile', field:"transactions.mobile", label: 'T Mobile', type: 'string', input: 'number'},
-            {id: 'rating', field:"transactions.rating", label: 'Rating', type: 'string'},
-            {id: 'remark', field:"transactions.remark", label: 'Remark', type: 'string'},
+            {id: 'transaction_date', field:"{{ env('DB_TBL_PREFIX') }}transactions.transaction_date", label: 'T Date', type: 'date'},
+            {id: 'transaction_type', field:"{{ env('DB_TBL_PREFIX') }}transactions.transaction_type", label: 'T Type', type: 'string', input: 'select', values: {!! file_get_contents(storage_path('app/transaction_types.json')) !!} },
+            {id: 'amount', field:"{{ env('DB_TBL_PREFIX') }}transactions.amount", label: 'Amount', type: 'string', input: 'number'},
+            {id: 'mobile', field:"{{ env('DB_TBL_PREFIX') }}transactions.mobile", label: 'T Mobile', type: 'string', input: 'number'},
+            {id: 'rating', field:"{{ env('DB_TBL_PREFIX') }}transactions.rating", label: 'Rating', type: 'string'},
+            {id: 'remark', field:"{{ env('DB_TBL_PREFIX') }}transactions.remark", label: 'Remark', type: 'string'},
         ];
         $("#report_table").on('change', function() {
             var v = $(this).val();

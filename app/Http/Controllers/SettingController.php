@@ -23,8 +23,10 @@ class SettingController extends Controller
     {
         $vehicle_models = json_encode(explode(',', $request->vehicle_models));
         $transaction_types = json_encode(explode(',', $request->transaction_types));
+        $finance = json_encode(explode(',', $request->finance));
         file_put_contents(storage_path('app/vehicle_models.json'), $vehicle_models);
         file_put_contents(storage_path('app/transaction_types.json'), $transaction_types);
+        file_put_contents(storage_path('app/finance.json'), $finance);
         return redirect()->route('settings.index')
             ->with(["type"=>"success", 'info'=>"Settings Updated!"]);
     }

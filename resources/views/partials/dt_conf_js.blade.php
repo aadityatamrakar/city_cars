@@ -12,7 +12,7 @@
         fixedColumns: true,
         ajax: '{{ route($route) }}',
         {!! $columns !!}
-        dom: 'Bfrtip',
+        dom: 'Blfrtip',
         buttons: [
             'copyHtml5',
             'excelHtml5',

@@ -1,5 +1,39 @@
 @extends('app')
 
+@section('styles')
+    <style>
+        .notifyjs-foo-base {
+            opacity: 0.85;
+            width: 200px;
+            background: #F5F5F5;
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        .notifyjs-foo-base .title {
+            width: 100px;
+            float: left;
+            margin: 10px 0 0 10px;
+            text-align: right;
+        }
+
+        .notifyjs-foo-base .buttons {
+            width: 70px;
+            float: right;
+            font-size: 9px;
+            padding: 5px;
+            margin: 2px;
+        }
+
+        .notifyjs-foo-base button {
+            font-size: 9px;
+            padding: 5px;
+            margin: 2px;
+            width: 60px;
+        }
+    </style>
+@endsection
+
 @section('content')
     @include('partials.page_header', ['title'=>"Data Entry", 'desc'=>isset($customer)?"Update Customer Records":''])
 
@@ -215,13 +249,13 @@
                 modal.find('#variant').val(vehicle.variant);
                 modal.find('#mfgyear').val(vehicle.mfgyear);
                 modal.find('#mi[value="'+vehicle.mi+'"]').trigger('click');
-                modal.find('#finance[value="'+vehicle.finance+'"]').trigger('click');
+                modal.find('#finance').val(vehicle.finance.toUpperCase());
                 modal.find('#fuel[value="'+vehicle.fuel+'"]').trigger('click');
-                modal.find('#insurance').val(vehicle.insurance);
+                if(vehicle.insurance != null) modal.find('#insurance').val(moment(vehicle.insurance).format('DD/MM/YYYY'));
                 modal.find('#warranty').val(vehicle.warranty);
-                modal.find('#warranty_exp').val(moment(vehicle.warranty_exp).format('DD/MM/YYYY'));
-                modal.find('#amc').val(vehicle.amc);
-                modal.find('#amc_exp').val(moment(vehicle.amc_exp).format('DD/MM/YYYY'));
+                if(vehicle.warranty_exp != null) modal.find('#warranty_exp').val(moment(vehicle.warranty_exp).format('DD/MM/YYYY'));
+                modal.find('#amc[value="'+vehicle.amc+'"]').trigger('click');
+                if(vehicle.amc_exp != null) modal.find('#amc_exp').val(moment(vehicle.amc_exp).format('DD/MM/YYYY'));
             }
         });
         $("#vehicle_save").on('click', function (e){
@@ -347,24 +381,68 @@
         });
 
         // Functions
+        @if(Route::currentRouteName() == 'data_entry')
         $('[data-toggle="check_duplicate"]').on('blur', function (e){
             var column = $(this).attr('name');
             var val = $(this).val();
             var table = $(this).data('table');
-
-            $.ajax({
-                url: "{{ route('duplicate_check') }}",
-                type: "POST",
-                data: {table: table, column: column, value: val, '_token': "{{ csrf_token() }}"}
-            }).done(function (res){
-                if(res['status'] == 'found'){
-                    if(table == 'customers')
-                        $.notify('Duplicate Found! Same '+column+' value in '+table+' with Customer Name: '+res['customer']['name'], 'warn');
-                    else if(table == 'vehicles')
-                        $.notify('Duplicate Found! Same '+column+' value in '+table+' with Reg No.- '+res['vehicle']['reg_no'], 'warn');
-                }
-            })
+            if(val.length > 0)
+            {
+                $.ajax({
+                    url: "{{ route('duplicate_check') }}",
+                    type: "POST",
+                    data: {table: table, column: column, value: val, '_token': "{{ csrf_token() }}"}
+                }).done(function (res) {
+                    if (res['status'] == 'found') {
+                        if (table == 'customers') {
+                            $.notify({
+                                title: 'Duplicate Found! Goto previous record ?',
+                                button: 'Confirm',
+                                customer_id: res['customer']['id']
+                            }, {
+                                style: 'foo',
+                                autoHide: false,
+                                clickToHide: false
+                            });
+                        }
+                        else if (table == 'vehicles') {
+                            $.notify({
+                                title: 'Duplicate Found! Goto previous record ?',
+                                button: 'Confirm',
+                                customer_id: res['vehicle']['id']
+                            }, {
+                                style: 'foo',
+                                autoHide: true,
+                                clickToHide: false
+                            });
+                        }
+                    }
+                })
+            }
         });
+
+        $.notify.addStyle('foo', {
+            html:
+            "<div>" +
+            "<div class='clearfix'>" +
+            "<div class='title' data-notify-html='title'/>" +
+            "<div class=\"hide\" id=\"customer_id\" data-notify-text='customer_id' />" +
+            "<div class='buttons'>" +
+            "<button class='no'>Cancel</button>" +
+            "<button class='yes' data-notify- data-notify-text='button'></button>" +
+            "</div>" +
+            "</div>" +
+            "</div>"
+        });
+        $(document).on('click', '.notifyjs-foo-base .no', function() {
+            $(this).trigger('notify-hide');
+        });
+        $(document).on('click', '.notifyjs-foo-base .yes', function() {
+            window.location = '{{ route('data_entry.edit', ['id'=>''])}}/'+$('.notifyjs-foo-base #customer_id').text();
+            $(this).trigger('notify-hide');
+        });
+        @endif
+
         function show_validation(validator){
             $.each(validator, function (item, errors){
                 $("#"+item).parent().children(1).html(errors[0]);

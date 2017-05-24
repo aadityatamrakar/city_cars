@@ -35,7 +35,7 @@ class LoginController extends Controller
             $client = $dd->getClient()['type']." (".$dd->getClient()['name'].' - '.$dd->getClient()['version'].")";
             $operating_system = $dd->getOs()['name'].' '.$dd->getOs()['version'];
             // Store Session Details
-            Session::create([ 'user_id'=>$user->id, 'ip_addr'=>$_SERVER['HTTP_X_REAL_IP'], 'client'=>$client, 'operating_system'=>$operating_system, 'device'=>$dd->getDevice(), 'brand_name'=>$dd->getBrandName(), 'model'=>$dd->getModel()]);
+            Session::create([ 'user_id'=>$user->id, 'ip_addr'=>$_SERVER['REMOTE_ADDR'], 'client'=>$client, 'operating_system'=>$operating_system, 'device'=>$dd->getDevice(), 'brand_name'=>$dd->getBrandName(), 'model'=>$dd->getModel()]);
 
             // if(Carbon::parse($user->password_changed)->diffInDays() > 90){
             //  $message = 'Password is more than 30 Days old, Kindly Change your password.';

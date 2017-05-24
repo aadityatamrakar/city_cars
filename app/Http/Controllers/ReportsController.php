@@ -94,19 +94,19 @@ class ReportsController extends Controller
     {
         $report = Report::findOrFail($id);
         if($report->table == 'customers'){
-            $report->sql_query = 'SELECT '.$report->columns.' FROM customers ' .
+            $report->sql_query = 'SELECT '.$report->columns.' FROM '.env('DB_TBL_PREFIX').'customers ' .
                 'WHERE '.($report->query==''?'1':$report->query);
         }else if($report->table == 'vehicles'){
-            $report->sql_query = 'SELECT '.$report->columns.' FROM vehicles ' .
-                'JOIN customers ON customers.id=vehicles.customer_id ' .
+            $report->sql_query = 'SELECT '.$report->columns.' FROM '.env('DB_TBL_PREFIX').'vehicles ' .
+                'JOIN '.env('DB_TBL_PREFIX').'customers ON '.env('DB_TBL_PREFIX').'customers.id='.env('DB_TBL_PREFIX').'vehicles.customer_id ' .
                 'WHERE '.($report->query==''?'1':$report->query);
         }else if($report->table == 'transactions') {
-            $report->sql_query = 'SELECT ' . $report->columns . ' FROM transactions ' .
-                'JOIN customers ON customers.id=transactions.customer_id ' .
-                'JOIN vehicles ON vehicles.id=transactions.vehicle_id ' .
+            $report->sql_query = 'SELECT ' . $report->columns . ' FROM '.env('DB_TBL_PREFIX').'transactions ' .
+                'JOIN '.env('DB_TBL_PREFIX').'customers ON '.env('DB_TBL_PREFIX').'customers.id='.env('DB_TBL_PREFIX').'transactions.customer_id ' .
+                'JOIN '.env('DB_TBL_PREFIX').'vehicles ON '.env('DB_TBL_PREFIX').'vehicles.id='.env('DB_TBL_PREFIX').'transactions.vehicle_id ' .
                 'WHERE ' . ($report->query==''?'1':$report->query);
         }else if($report->table == 'sessions') {
-            $report->sql_query = 'SELECT ' . $report->columns . ' FROM sessions ' .
+            $report->sql_query = 'SELECT ' . $report->columns . ' FROM '.env('DB_TBL_PREFIX').'sessions ' .
                 'WHERE ' . ($report->query==''?'1':$report->query);
         }
         $report->params = json_decode($report->params);

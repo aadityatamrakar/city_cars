@@ -63,16 +63,16 @@
                 return '<a href=\"/data_entry/edit/'+full.cid+'\">'+data+'</a>';
             }
         },
-        {data: 'name', name: 'customers.name', render:
+        {data: 'name', name: '".env('DB_TBL_PREFIX')."customers.name', render:
             function (data, type, full, meta){
                 return '<a href=\"/data_entry/edit/'+full.cid+'\">'+data+'</a>';
             }
         },
-        {data: 'mobile1', name: 'customers.mobile1'},
-        {data: 'city', name: 'customers.city'},
-        {data: 'reg_no', name: 'vehicles.reg_no'},
-        {data: 'model', name: 'vehicles.model'},
-        {data: 'variant', name: 'vehicles.variant'},
+        {data: 'mobile1', name: '".env('DB_TBL_PREFIX')."customers.mobile1'},
+        {data: 'city', name: '".env('DB_TBL_PREFIX')."customers.city'},
+        {data: 'reg_no', name: '".env('DB_TBL_PREFIX')."vehicles.reg_no'},
+        {data: 'model', name: '".env('DB_TBL_PREFIX')."vehicles.model'},
+        {data: 'variant', name: '".env('DB_TBL_PREFIX')."vehicles.variant'},
         {data: 'transaction_date', name: 'transaction_date'},
         {data: 'transaction_type', name: 'transaction_type'},
         {data: 'amount', name: 'amount'},

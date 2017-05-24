@@ -40,11 +40,11 @@ class DataEntryController extends Controller
         $validator = Validator::make($request->all(), [
             "name"      =>  "required",
             "mobile1"   =>  "required|numeric|digits:10",
-            "mobile2"   =>  "numeric|digits:10|different:mobile1",
+            "mobile2"   =>  "nullable|numeric|digits:10|different:mobile1",
             "city"      =>  "required",
-            "email"     =>  "email",
-            "dob"       =>  "date_format:d/m/Y",
-            "pincode"   =>  "numeric|digits:6",
+            "email"     =>  "nullable|email",
+            "dob"       =>  "nullable|date_format:d/m/Y",
+            "pincode"   =>  "nullable|numeric|digits:6",
         ]);
 
         if ($validator->fails()) {
@@ -53,7 +53,7 @@ class DataEntryController extends Controller
             return $data;
         }else{
             $data = $request->only('name', 'mobile1', 'mobile2', 'city', 'pincode', 'address', 'email', 'autocard');
-            $data['dob'] = Carbon::createFromFormat('d/m/Y', $request->dob)->format('Y-m-d');
+            $data['dob'] = isset($data['dob'])?Carbon::createFromFormat('d/m/Y', $request->dob)->format('Y-m-d'):null;
             $data['user_id'] = Auth::user()->id;
             if($request->has('customer_id')){
                 $customer = Customer::find($request->customer_id);
@@ -73,8 +73,8 @@ class DataEntryController extends Controller
             "chassis_no"    =>  "required|numeric",
             "engine_no"     =>  "required|numeric",
             "mfgyear"       =>  "required|numeric|digits:4",
-            "warranty_exp"  =>  "date_format:d/m/Y",
-            "amc_exp"       =>  "date_format:d/m/Y",
+            "warranty_exp"  =>  "nullable|date_format:d/m/Y",
+            "amc_exp"       =>  "nullable|date_format:d/m/Y",
             "customer_id"   =>  "required|exists:customers,id",
         ]);
 
@@ -84,9 +84,9 @@ class DataEntryController extends Controller
             return $data;
         }else{
             $data = $request->only('reg_no', 'chassis_no', 'engine_no', 'model', 'variant', 'mfgyear', 'mi', 'insurance', 'warranty', 'amc', 'customer_id', 'finance', 'fuel');
-            $data['insurance'] = Carbon::createFromFormat('d/m/Y', $request->insurance)->format('Y-m-d');
-            $data['amc_exp'] = Carbon::createFromFormat('d/m/Y', $request->amc_exp)->format('Y-m-d');
-            $data['warranty_exp'] = Carbon::createFromFormat('d/m/Y', $request->warranty_exp)->format('Y-m-d');
+            $data['insurance'] = isset($data['insurance'])?Carbon::createFromFormat('d/m/Y', $request->insurance)->format('Y-m-d'):null;
+            $data['amc_exp'] = isset($data['amc_exp'])?Carbon::createFromFormat('d/m/Y', $request->amc_exp)->format('Y-m-d'):null;
+            $data['warranty_exp'] = isset($data['warranty_exp'])?Carbon::createFromFormat('d/m/Y', $request->warranty_exp)->format('Y-m-d'):null;
             $data['user_id'] = Auth::user()->id;
             if($request->has('vehicle_id') && ($vehicle=Vehicle::find($request->vehicle_id))!=null && $vehicle->update($data))
                 return ['status'=>"updated", "vehicle"=>$vehicle];
@@ -103,8 +103,8 @@ class DataEntryController extends Controller
             "customer_id"       =>  "required|exists:customers,id",
             "vehicle_id"        =>  "required|numeric",
             "amount"            =>  "required|numeric",
-            "mobile"            =>  "numeric|digits:10",
-            "transaction_date"  =>  "date_format:d/m/Y",
+            "mobile"            =>  "nullable|numeric|digits:10",
+            "transaction_date"  =>  "nullable|date_format:d/m/Y",
             "transaction_type"  =>  "required",
         ]);
 
@@ -114,7 +114,7 @@ class DataEntryController extends Controller
             return $data;
         }else{
             $data = $request->only('customer_id', 'vehicle_id','transaction_type','amount','mobile','rating', 'remark');
-            $data['transaction_date'] = Carbon::createFromFormat('d/m/Y', $request->transaction_date)->format('Y-m-d');
+            $data['transaction_date'] = isset($data['transaction_date'])?Carbon::createFromFormat('d/m/Y', $request->transaction_date)->format('Y-m-d'):null;
             $data['user_id'] = Auth::user()->id;
             if($request->has('transaction_id') && ($transaction=Transaction::find($request->transaction_id))!=null && $transaction->update($data) && $transaction->vehicle)
                 return ['status'=>"updated", 'transaction'=>$transaction];
@@ -134,7 +134,8 @@ class DataEntryController extends Controller
             else return ['status'=>'not_found'];
         }else if($request->table == 'vehicles'){
             $vehicle = Vehicle::select('id', 'reg_no')->where($request->column, $request->value)->first();
-            if($vehicle != null) return ['status'=>"found", "vehicle"=>$vehicle];
+            $customer = $vehicle->customer;
+            if($vehicle != null) return ['status'=>"found", "vehicle"=>$vehicle, "customer"=>$customer];
             else return ['status'=>'not_found'];
         }
     }

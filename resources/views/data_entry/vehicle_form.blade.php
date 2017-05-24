@@ -67,14 +67,12 @@
         <div class="form-group">
             <label class="col-md-4 control-label" for="finance">Finance</label>
             <div class="col-md-4">
-                <label class="radio-inline" for="finance-0">
-                    <input type="radio" name="finance" id="finance-0" value="No" checked="checked">
-                    No
-                </label>
-                <label class="radio-inline" for="finance-1">
-                    <input type="radio" name="finance" id="finance-1" value="Yes">
-                    Yes
-                </label>
+                <select class="form-control" id="finance">
+                    <option>--select--</option>
+                    @foreach(json_decode(file_get_contents(storage_path('app/finance.json'))) as $finance)
+                        <option value="{{ strtoupper($finance) }}">{{ strtoupper($finance) }}</option>
+                    @endforeach
+                </select>
                 <span class="help-block"></span>
             </div>
         </div>
@@ -120,7 +118,14 @@
         <div class="form-group">
             <label class="col-md-4 control-label" for="amc">AMC</label>
             <div class="col-md-5">
-                <input id="amc" name="amc" type="text" placeholder="" class="form-control input-md">
+                <label class="radio-inline" for="amc-0">
+                    <input type="radio" name="amc" id="amc-0" value="No" checked="checked">
+                    No
+                </label>
+                <label class="radio-inline" for="mi-1">
+                    <input type="radio" name="amc" id="amc-1" value="Yes">
+                    Yes
+                </label>
                 <span class="help-block"></span>
             </div>
         </div>
